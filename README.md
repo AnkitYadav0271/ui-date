@@ -92,7 +92,7 @@ console.log(date.isLeapYear()); // true
 | **`getTime`**          | `(use24Hour?: boolean)` | `string` | `getTime(true)` ➔ `"19:11"`                    | Formatted time string (`"07:11 PM"` or `"19:11"`).       |
 | **`getDate`**          | `(isoFormat?: boolean)` | `string` | `getDate(true)` ➔ `"2026-07-23"`               | Calendar date string (`"07/23/2026"` or `"2026-07-23"`). |
 | **`getRelativeTime`**  | —                       | `string` | `getRelativeTime()` ➔ `"5 minutes ago"`        | Human-readable time relative to right now.               |
-| **`formatFullDate()`** | \_                      | `string` | `formatFullDate()` ➔ `"Thursday 23,July,2026"` | Human-readable time formate                              |
+| **`formatFullDate()`** | __                      | `string` | `formatFullDate()` ➔ `"Thursday 23,July,2026"` | Human-readable time formate                              |
 
 ---
 
@@ -114,7 +114,7 @@ console.log(date.isLeapYear()); // true
 | **`isWeekend`**   | —      | `boolean` | `true` / `false`      | Returns `true` if Saturday or Sunday.                 |
 | **`isLeapYear`**  | —      | `boolean` | `true` / `false`      | Returns `true` if year is a leap year.                |
 | **`getOverview`** | —      | `Object`  | `{ date, time, ... }` | Returns a key-value object of all computed fields.    |
-| **`isTomorrow`**  | \_     | `Boolean` | `true`/ `false`       | Returns `true` if next day from init date is tomorrow |
+| **`isTomorrow`**  | __    | `Boolean` | `true`/ `false`       | Returns `true` if next day from init date is tomorrow |
 
 # Comprehensive getOverview() Example
 
