@@ -1,0 +1,42 @@
+{
+  "name": "ui-date",
+  "version": "1.0.0",
+  "description": "Lightweight, zero-dependency date formatting utility for modern UIs.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/AnkitYadav027/ui-date#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnkitYadav027/ui-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AnkitYadav027/ui-date/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "keywords": [
+    "date",
+    "ui",
+    "format",
+    "typescript",
+    "utility",
+    "ui-date"
+  ],
+  "author": "Ankit Yadav",
+  "license": "MIT"
+}
