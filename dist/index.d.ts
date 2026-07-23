@@ -38,5 +38,5 @@ declare class UiDate {
     formatFullDate(short?: boolean): string;
     getOverView(): DateOverview;
 }
-export declare function uiDate(date: UiDateInput): UiDate;
+export declare function uiDate(date?: UiDateInput): UiDate;
 export default uiDate;

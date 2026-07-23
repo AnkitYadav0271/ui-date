@@ -147,6 +147,9 @@ class UiDate {
     }
 }
 export function uiDate(date) {
+    if (!date) {
+        date = new Date();
+    }
     return new UiDate(date);
 }
 export default uiDate;
