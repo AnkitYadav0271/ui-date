@@ -82,6 +82,25 @@ console.log(date.isWeekend()); // false
 console.log(date.isLeapYear()); // true
 ```
 
+## ❄️React Example
+
+```jsx
+import React from 'react';
+import uiDate from 'ui-date';
+
+export function CommentTile({ createdAt }: { createdAt: string }) {
+  const date = uiDate(createdAt,"en-US"); //second argument is optional default is browsers or machines locale
+
+  return (
+    <div className="comment">
+      <p>Posted {date.getRelativeTime()}</p>
+      <span>{date.formatFullDate()}</span>
+    </div>
+  );
+}
+
+```
+
 ## 📖 API Reference
 
 ### 🚀 Core Methods
