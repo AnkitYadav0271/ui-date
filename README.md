@@ -55,7 +55,8 @@ bun add ui-date
 import uiDate from "ui-date";
 
 // Initialize with a Date object, ISO string, timestamp, or no arguments (defaults to now)
-const date = uiDate("2026-07-23T19:11:00");
+// the second argument is optional default will be users browser or machine locale
+const date = uiDate("2026-07-23T19:11:00", "en-US");
 
 // Extract Formatted Date Parts
 console.log(date.getDayName()); // "Thursday"
@@ -92,7 +93,7 @@ console.log(date.isLeapYear()); // true
 | **`getTime`**          | `(use24Hour?: boolean)` | `string` | `getTime(true)` ➔ `"19:11"`                    | Formatted time string (`"07:11 PM"` or `"19:11"`).       |
 | **`getDate`**          | `(isoFormat?: boolean)` | `string` | `getDate(true)` ➔ `"2026-07-23"`               | Calendar date string (`"07/23/2026"` or `"2026-07-23"`). |
 | **`getRelativeTime`**  | —                       | `string` | `getRelativeTime()` ➔ `"5 minutes ago"`        | Human-readable time relative to right now.               |
-| **`formatFullDate()`** | __                      | `string` | `formatFullDate()` ➔ `"Thursday 23,July,2026"` | Human-readable time formate                              |
+| **`formatFullDate()`** | \_\_                    | `string` | `formatFullDate()` ➔ `"Thursday 23,July,2026"` | Human-readable time formate                              |
 
 ---
 
@@ -114,7 +115,7 @@ console.log(date.isLeapYear()); // true
 | **`isWeekend`**   | —      | `boolean` | `true` / `false`      | Returns `true` if Saturday or Sunday.                 |
 | **`isLeapYear`**  | —      | `boolean` | `true` / `false`      | Returns `true` if year is a leap year.                |
 | **`getOverview`** | —      | `Object`  | `{ date, time, ... }` | Returns a key-value object of all computed fields.    |
-| **`isTomorrow`**  | __    | `Boolean` | `true`/ `false`       | Returns `true` if next day from init date is tomorrow |
+| **`isTomorrow`**  | \_\_   | `Boolean` | `true`/ `false`       | Returns `true` if next day from init date is tomorrow |
 
 # Comprehensive getOverview() Example
 
