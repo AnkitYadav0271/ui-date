@@ -15,7 +15,7 @@
 ## ✨ Features
 
 - **Zero Dependencies:** Extremely small bundle footprint built entirely on native JavaScript capabilities.
-- **Light & Fast:**Minimal memory overhead with instant method evaluations.
+- **Light & Fast:** Minimal memory overhead with instant method evaluations.
 - **Fully Typed:** Written in TypeScript with complete type definitions and inline doc comments.
 - **Chainable API:** Clean, readable methods for extracting human-formatted date/time properties.
 - **Relative Time Built-In:** Human-readable output like `"5 minutes ago"` or `"in 2 days"`.
