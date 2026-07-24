@@ -115,6 +115,89 @@ class UiDate {
         }
         return "just now";
     }
+    /** Returns human readable object (eg: {value:2,unit:"hour",direction:"past" |"present"| "future"}) */
+    getRelativeTimeParts() {
+        const d = this._date.getTime();
+        const now = new Date().getTime();
+        const diffInSeconds = Math.round((d - now) / 1000);
+        const direction = diffInSeconds === 0 ? "present" : diffInSeconds < 0 ? "past" : "future";
+        const units = [
+            { name: "year", seconds: 31536000 },
+            { name: "month", seconds: 2592000 },
+            { name: "day", seconds: 86400 },
+            { name: "hour", seconds: 3600 },
+            { name: "minute", seconds: 60 },
+            { name: "second", seconds: 1 },
+        ];
+        const rtfAlways = new Intl.RelativeTimeFormat(this._locale, {
+            numeric: "always",
+        });
+        const rtfAuto = new Intl.RelativeTimeFormat(this._locale, {
+            numeric: "auto",
+        });
+        for (const unit of units) {
+            if (Math.abs(diffInSeconds) >= unit.seconds || unit.name === "second") {
+                const rawValue = Math.round(diffInSeconds / unit.seconds);
+                const absValue = Math.abs(rawValue);
+                const exactParts = rtfAlways.formatToParts(rawValue, unit.name);
+                const integerIndex = exactParts.findIndex((p) => p.type === "integer");
+                const integerPart = integerIndex !== -1 ? exactParts[integerIndex] : null;
+                const formattedValue = integerPart ? integerPart.value : `${absValue}`;
+                const unitPart = exactParts.find((p) => p.type === "unit");
+                let formattedUnit = unitPart?.value;
+                if (!formattedUnit && integerIndex !== -1) {
+                    // To strip directional suffixes (like Japanese "前"/"後" or German "vor"),
+                    // compare tokens with the opposite sign value to find the constant unit substring.
+                    //For more visit : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
+                    const oppositeParts = rtfAlways.formatToParts(-rawValue, unit.name);
+                    const currentTrailing = exactParts
+                        .slice(integerIndex + 1)
+                        .filter((p) => p.type === "literal")
+                        .map((p) => p.value)
+                        .join("")
+                        .trim();
+                    const oppositeTrailing = oppositeParts
+                        .slice(integerIndex + 1)
+                        .filter((p) => p.type === "literal")
+                        .map((p) => p.value)
+                        .join("")
+                        .trim();
+                    let commonUnit = "";
+                    for (let i = 0; i < currentTrailing.length; i++) {
+                        if (currentTrailing[i] === oppositeTrailing[i]) {
+                            commonUnit += currentTrailing[i];
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    formattedUnit = commonUnit.trim() || currentTrailing || unit.name;
+                }
+                formattedUnit = formattedUnit || unit.name;
+                // Full localized sentence
+                const autoParts = rtfAuto.formatToParts(rawValue, unit.name);
+                const formattedText = autoParts.map((p) => p.value).join("");
+                return {
+                    value: absValue,
+                    unit: unit.name,
+                    direction,
+                    formattedValue,
+                    formattedUnit,
+                    formattedText,
+                };
+            }
+        }
+        // Exact present fallback
+        const defaultParts = rtfAuto.formatToParts(0, "second");
+        return {
+            value: 0,
+            unit: "second",
+            direction: "present",
+            formattedValue: "0",
+            formattedUnit: defaultParts.find((p) => p.type === "unit")?.value || "seconds",
+            formattedText: defaultParts.map((p) => p.value).join(""),
+        };
+    }
     /** Returns human readable formatted full date */
     formatFullDate(short = false) {
         const dayName = this.getDayName(short);
@@ -144,6 +227,7 @@ class UiDate {
             isTomorrow: this.isTomorrow(),
             isYesterday: this.isYesterday(),
             formatFullDate: this.formatFullDate(),
+            relativeTimeParts: this.getRelativeTimeParts(),
         };
     }
 }

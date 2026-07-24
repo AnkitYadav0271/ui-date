@@ -57,7 +57,7 @@ describe("Year & Calendar Checks", () => {
   });
 });
 
-// --- MISSING: Formatting (getTime / getDate) ---
+//  Formatting (getTime / getDate)
 describe("getTime & getDate", () => {
   it("should format time in 12-hour and 24-hour formats", () => {
     let date = uiDate("2026-07-23T19:11:00");
@@ -110,7 +110,7 @@ describe("isToday / isTomorrow / isYesterday", () => {
   });
 });
 
-// --- Relative Time Tests ---
+//  Relative Time Tests
 describe("getRelativeTime()", () => {
   const MOCK_NOW = new Date("2026-07-23T12:00:00.000Z");
 
@@ -158,7 +158,146 @@ describe("getRelativeTime()", () => {
   });
 });
 
-//  Localization Tests 
+//Relative Time Parts Test
+
+describe("getRelativeTimeParts() - Multi-Locale Coverage", () => {
+  const MOCK_NOW = new Date("2026-07-24T10:00:00Z");
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(MOCK_NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  describe("1. English (`en-US`) - Suffix Past / Prefix Future", () => {
+    it("formats past and future with standard English structures", () => {
+      const past = new Date("2026-07-24T08:00:00Z"); // 2 hours ago
+      const future = new Date("2026-07-24T12:00:00Z"); // in 2 hours
+
+      expect(uiDate(past, "en-US").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "past",
+        formattedValue: "2",
+        formattedUnit: "hours",
+        formattedText: "2 hours ago",
+      });
+
+      expect(uiDate(future, "en-US").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "future",
+        formattedText: "in 2 hours",
+      });
+    });
+  });
+
+  describe('2. Spanish (`es-ES`) - Prefix Preposition ("hace")', () => {
+    it('formats past using leading preposition "hace"', () => {
+      const past = new Date("2026-07-24T08:00:00Z"); // 2 hours ago
+
+      expect(uiDate(past, "es-ES").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "past",
+        formattedValue: "2",
+        formattedUnit: "horas",
+        formattedText: "hace 2 horas",
+      });
+    });
+
+    it('formats exact present as "ahora"', () => {
+      expect(uiDate(MOCK_NOW, "es-ES").getRelativeTimeParts()).toMatchObject({
+        direction: "present",
+        formattedText: "ahora",
+      });
+    });
+  });
+
+  describe('3. German (`de-DE`) - Dative Suffixing ("vor" & "-n")', () => {
+    it('formats past using preposition "vor" and dative unit forms', () => {
+      const past = new Date("2026-07-24T08:00:00Z"); // 2 hours ago
+
+      expect(uiDate(past, "de-DE").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "past",
+        formattedValue: "2",
+        formattedUnit: "Stunden",
+        formattedText: "vor 2 Stunden",
+      });
+    });
+
+    it('formats exact present as "jetzt"', () => {
+      expect(uiDate(MOCK_NOW, "de-DE").getRelativeTimeParts()).toMatchObject({
+        direction: "present",
+        formattedText: "jetzt",
+      });
+    });
+  });
+
+  describe('4. Japanese (`ja-JP`) - Postposition Suffixing ("前" / "後")', () => {
+    it("formats relative time using kanji suffixes without spaces", () => {
+      const past = new Date("2026-07-24T08:00:00Z"); // 2 hours ago
+      const future = new Date("2026-07-24T12:00:00Z"); // in 2 hours
+
+      expect(uiDate(past, "ja-JP").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "past",
+        formattedValue: "2",
+        formattedUnit: "時間",
+        formattedText: "2 時間前",
+      });
+
+      expect(uiDate(future, "ja-JP").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "future",
+        formattedText: "2 時間後",
+      });
+    });
+
+    it('formats exact present as "今"', () => {
+      expect(uiDate(MOCK_NOW, "ja-JP").getRelativeTimeParts()).toMatchObject({
+        direction: "present",
+        formattedText: "今",
+      });
+    });
+  });
+
+  describe('5. French (`fr-FR`) - Prefix Preposition ("il y a")', () => {
+    it('formats past using multi-word preposition "il y a"', () => {
+      const past = new Date("2026-07-24T08:00:00Z"); // 2 hours ago
+
+      expect(uiDate(past, "fr-FR").getRelativeTimeParts()).toMatchObject({
+        value: 2,
+        unit: "hour",
+        direction: "past",
+        formattedValue: "2",
+        formattedUnit: "heures", // Clean unit word!
+        formattedText: "il y a 2 heures",
+      });
+    });
+  });
+
+  describe("6. Arabic (`ar-EG`) - Right-to-Left (RTL) & Dual Forms", () => {
+    it("handles localized Arabic numeral formatting and RTL text", () => {
+      const past = new Date("2026-07-24T07:00:00Z"); // 3 hours ago
+
+      const parts = uiDate(past, "ar-EG").getRelativeTimeParts();
+
+      expect(parts.direction).toBe("past");
+      expect(parts.unit).toBe("hour");
+      expect(parts.formattedText).toBeTruthy(); // Verifies non-empty localized RTL string
+    });
+  });
+});
+
+//  Localization Tests
 describe("Locale Support", () => {
   it("should format weekday and month in Spanish when locale is es-ES", () => {
     const date = uiDate("2026-07-23T12:00:00", "es-ES");
@@ -180,4 +319,3 @@ describe("Error Handling", () => {
     expect(() => uiDate("not-a-valid-date")).toThrow("Invalid input");
   });
 });
-

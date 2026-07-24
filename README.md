@@ -1,25 +1,35 @@
 # 📅 ui-date
 
-> A lightweight, chainable, zero-dependency date formatting and manipulation library built for modern web applications and react native applications.
+> A lightweight, zero-dependency TypeScript library for formatting, inspecting, and presenting dates with a clean, chainable API.
 
-`ui-date` provides a clean, object-oriented wrapper around JavaScript's native `Intl` and `Date` APIs. It gives you intuitive date parsing, formatting, relative time calculation, and status checks with strong TypeScript definitions out of the box.
+`ui-date` Built on JavaScript's native `Date` and `Intl` APIs for maximum performance and zero dependencies. It gives you intuitive date parsing, formatting, relative time calculation, and status checks with strong TypeScript definitions out of the box.
 
 ---
 
-## ⚡ Performance & Size
+## ⚡ Package Size
 
-- 📦 **Unminified:** 1.64 kB
-- 🗜️ **Minified + Gzipped:** < 1 kB
-- 🚫 **Dependencies:** 0 (Tree-shakeable ES Module)
+- 📦 Unpacked Size: **1.64 kB**
+- 🗜️ Minified + Gzipped: **< 1 kB**
+- 🚫 Runtime Dependencies: **0**
+- 🌲 Tree-shakeable ES Module
+- 📘 Full TypeScript Support
 
 ## ✨ Features
 
-- **Zero Dependencies:** Extremely small bundle footprint built entirely on native JavaScript capabilities.
-- **Light & Fast:** Minimal memory overhead with instant method evaluations.
-- **Fully Typed:** Written in TypeScript with complete type definitions and inline doc comments.
-- **Chainable API:** Clean, readable methods for extracting human-formatted date/time properties.
-- **Relative Time Built-In:** Human-readable output like `"5 minutes ago"` or `"in 2 days"`.
-- **Full Date Formate Built-In:** Human-readable output like `"Thursday 23,July,2026"`.
+## ✨ Features
+
+- 🚫 **Zero Dependencies** — Built entirely on native JavaScript APIs.
+- ⚡ **Lightweight & Fast** — Tiny bundle size with minimal runtime overhead.
+- **Full Internationalization (i18n):** Support for all standard BCP 47 locale tags (`es-ES`, `de-DE`, `ja-JP`, etc.).
+- **Graceful Locale Fallback:** Bad or unsupported locale strings now safely default to system locale without crashing.
+- **Native Relative Time Formatting:** Utilizes `Intl.RelativeTimeFormat` for automatically localized relative dates.
+-  **Fully Typed** — Complete TypeScript definitions included.
+-  **Chainable API** — Clean, intuitive, object-oriented methods.
+-  **Relative Time** — Generate strings like `"5 minutes ago"` or `"in 2 days"`.
+-  **Readable Date Formatting** — Format dates into human-friendly strings.
+-  **Date Overview API** — Retrieve all commonly used date properties in a single call.
+-  **Date Status Helpers** — Check if a date is today, tomorrow, yesterday, a weekend, or a leap year.
+-  **Framework Agnostic** — Works with any JavaScript or TypeScript project.
 
 ---
 
@@ -49,125 +59,701 @@ pnpm add ui-date
 bun add ui-date
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Example
 
-```javascript
+```ts
 import uiDate from "ui-date";
 
-// Initialize with a Date object, ISO string, timestamp, or no arguments (defaults to now)
-// the second argument is optional default will be users browser or machine locale
-const date = uiDate("2026-07-23T19:11:00", "en-US");
+const date = uiDate("2026-07-23");
 
-// Extract Formatted Date Parts
-console.log(date.getDayName()); // "Thursday"
-console.log(date.getDayName(true)); // "Thu"
-console.log(date.getMonthName()); // "July"
+date.getDayName();
+// Thursday
 
-// Date & Time Formatting
-console.log(date.getTime()); // "07:11 PM"
-console.log(date.getTime(true)); // "19:11"
-console.log(date.getDate()); // "07/23/2026"
-console.log(date.getDate(true)); // "2026-07-23"
+date.getRelativeTime();
+// in 2 days
 
-// Relative Time
-console.log(date.getRelativeTime()); // e.g. "just now" / "2 hours ago"
+date.formatFullDate();
+// Thursday 23, July, 2026
 
-//formatFullDate
-
-console.log(date.formatFullDate()); // e.g. "Thursday 23,July,2026"
-
-// Boolean Status Checks
-console.log(date.isToday()); // false
-console.log(date.isWeekend()); // false
-console.log(date.isLeapYear()); // true
+date.isWeekend();
+// false
 ```
 
-## ❄️React Example
+## ✅ Works Everywhere
 
-```jsx
-import React from 'react';
-import uiDate from 'ui-date';
+`ui-date` works anywhere JavaScript runs.
 
-export function CommentTile({ createdAt }: { createdAt: string }) {
-  const date = uiDate(createdAt,"en-US"); //second argument is optional default is browsers or machines locale
-
-  return (
-    <div className="comment">
-      <p>Posted {date.getRelativeTime()}</p>
-      <span>{date.formatFullDate()}</span>
-    </div>
-  );
-}
-
-```
+- Vanilla JavaScript
+- TypeScript
+- React
+- React Native
+- Next.js
+- Vue
+- Nuxt
+- Svelte
+- SvelteKit
+- Angular
+- Astro
+- Remix
+- Node.js
+- Bun
+- Deno
 
 ## 📖 API Reference
 
-### 🚀 Core Methods
+# API Reference
 
-| Method                 | params                  | Returns  | Example / Output                               | Description                                              |
-| :--------------------- | :---------------------- | :------- | :--------------------------------------------- | :------------------------------------------------------- |
-| **`getDayName`**       | `(short?: boolean)`     | `string` | `getDayName(true)` ➔ `"Thu"`                   | Full or short weekday name (`"Thursday"` vs `"Thu"`).    |
-| **`getMonthName`**     | `(short?: boolean)`     | `string` | `getMonthName()` ➔ `"July"`                    | Full or short month name (`"July"` vs `"Jul"`).          |
-| **`getTime`**          | `(use24Hour?: boolean)` | `string` | `getTime(true)` ➔ `"19:11"`                    | Formatted time string (`"07:11 PM"` or `"19:11"`).       |
-| **`getDate`**          | `(isoFormat?: boolean)` | `string` | `getDate(true)` ➔ `"2026-07-23"`               | Calendar date string (`"07/23/2026"` or `"2026-07-23"`). |
-| **`getRelativeTime`**  | —                       | `string` | `getRelativeTime()` ➔ `"5 minutes ago"`        | Human-readable time relative to right now.               |
-| **`formatFullDate()`** | \_\_                    | `string` | `formatFullDate()` ➔ `"Thursday 23,July,2026"` | Human-readable time formate                              |
+The package exports a single factory function, `uiDate()`, which returns a `UiDate` instance exposing a rich set of date formatting and utility methods.
 
----
+```ts
+import uiDate from "@ui-date";
 
-### 🔢 Numeric Getters
-
-| Method              | params | Returns  | Example / Output        | Description                 |
-| :------------------ | :----- | :------- | :---------------------- | :-------------------------- |
-| **`getDay`**        | —      | `number` | `getDay()` ➔ `23`       | Day of the month (1–31).    |
-| **`getMonthCount`** | —      | `number` | `getMonthCount()` ➔ `7` | 1-based month index (1–12). |
-| **`getYear`**       | —      | `number` | `getYear()` ➔ `2026`    | Four-digit year (`YYYY`).   |
-
----
-
-### ⚡ Status Checks & Overview
-
-| Method            | params | Returns   | Output                | Description                                           |
-| :---------------- | :----- | :-------- | :-------------------- | :---------------------------------------------------- |
-| **`isToday`**     | —      | `boolean` | `true` / `false`      | Checks if date matches today's calendar day.          |
-| **`isWeekend`**   | —      | `boolean` | `true` / `false`      | Returns `true` if Saturday or Sunday.                 |
-| **`isLeapYear`**  | —      | `boolean` | `true` / `false`      | Returns `true` if year is a leap year.                |
-| **`getOverview`** | —      | `Object`  | `{ date, time, ... }` | Returns a key-value object of all computed fields.    |
-| **`isTomorrow`**  | \_\_   | `Boolean` | `true`/ `false`       | Returns `true` if next day from init date is tomorrow |
-
-# Comprehensive getOverview() Example
-
-`When building user interfaces, you often need multiple fields at once. getOverview() returns a summary object:`
-
-```javascript
-const date = uiDate("2026-07-23T19:11:00");
-
-console.log(date.getOverview());
-/*
-Output:
-{
-  dayName: 'Thursday',
-  shortDayName: 'Thu',
-  day: 23,
-  monthName: 'July',
-  shortMonthName: 'Jul',
-  monthCount: 7,
-  isWeekend: false,
-  year: 2026,
-  isoDate: '2026-07-23',
-  usDate: '07/23/2026',
-  time12: '07:16 PM',
-  time24: '19:16',
-  isLeapYear: false,
-  relativeTime: 'just now',
-  isToday: true,
-  isTomorrow: false,
-  isYesterday: false,
-  formatFullDate: 'Thursday 23,July,2026'
-}
-*/
+const date = uiDate("2026-08-15");
 ```
+
+> **Supported input types**
+>
+> - `Date`
+> - ISO Date String
+> - Timestamp (milliseconds)
+
+```ts
+uiDate(new Date());
+
+uiDate("2026-08-15");
+
+uiDate(1786752000000);
+```
+
+You can also specify a locale for localized formatting.
+
+```ts
+uiDate("2026-08-15", "en-US");
+
+uiDate("2026-08-15", "fr-FR");
+
+uiDate("2026-08-15", "hi-IN");
+```
+
+---
+
+# Methods
+
+## getDayName()
+
+Returns the day name.
+
+### Signature
+
+```ts
+getDayName(short?: boolean): string
+```
+
+### Parameters
+
+| Parameter | Type    | Default | Description                                                                 |
+| --------- | ------- | ------- | --------------------------------------------------------------------------- |
+| short     | boolean | false   | Returns short (eg: Wed) when `true` or full (eg:- Wednesday) when `false` . |
+
+### Returns
+
+```ts
+string;
+```
+
+### Example
+
+```ts
+const date = uiDate("2026-08-15");
+
+date.getDayName();
+// Saturday
+
+date.getDayName(true);
+// Sat
+```
+
+### Use Cases
+
+Use this method whenever you need to display the weekday in a user interface.
+
+Examples:
+
+- Calendar headers
+- Event cards
+- Meeting schedules
+- Booking systems
+
+---
+
+## getMonthName()
+
+Returns the localized month name.
+
+### Signature
+
+```ts
+getMonthName(short?: boolean): string
+```
+
+### Parameters
+
+| Parameter | Type    | Default | Description                                                                   |
+| --------- | ------- | ------- | ----------------------------------------------------------------------------- |
+| short     | boolean | false   | Returns short (eg:Jul) when `true` or full (eg:July) when `false` month name. |
+
+### Returns
+
+```ts
+string;
+```
+
+### Example
+
+```ts
+const date = uiDate("2026-08-15");
+
+date.getMonthName();
+// August
+
+date.getMonthName(true);
+// Aug
+```
+
+### Use Cases
+
+Perfect for displaying readable dates inside cards, invoices, reports, or event pages.
+
+---
+
+## getYear()
+
+Returns the four-digit year.
+
+### Signature
+
+```ts
+getYear(): number
+```
+
+### Returns
+
+```ts
+number;
+```
+
+### Example
+
+```ts
+uiDate("2026-08-15").getYear();
+
+// 2026
+```
+
+### Use Cases
+
+Useful for:
+
+- Copyright notices
+- Reports
+- Archives
+- Date calculations
+
+---
+
+## getMonthCount()
+
+Returns the month number (1-12).
+
+### Signature
+
+```ts
+getMonthCount(): number
+```
+
+### Returns
+
+```ts
+number;
+```
+
+### Example
+
+```ts
+uiDate("2026-08-15").getMonthCount();
+
+// 8
+```
+
+### Use Cases
+
+Useful when storing or comparing months numerically.
+
+---
+
+## getDay()
+
+Returns the day of the month.
+
+### Signature
+
+```ts
+getDay(): number
+```
+
+### Returns
+
+```ts
+number;
+```
+
+### Example
+
+```ts
+uiDate("2026-08-15").getDay();
+
+// 15
+```
+
+### Use Cases
+
+Ideal for calendars, schedules, and custom date formatting.
+
+---
+
+## getTime()
+
+Returns the formatted time.
+
+### Signature
+
+```ts
+getTime(use24HourFormat?: boolean): string
+```
+
+### Parameters
+
+| Parameter       | Type    | Default |
+| --------------- | ------- | ------- |
+| use24HourFormat | boolean | false   |
+
+### Example
+
+```ts
+const date = uiDate();
+
+date.getTime();
+// 06:30 PM
+
+date.getTime(true);
+// 18:30
+```
+
+### Use Cases
+
+Recommended for:
+
+- Chat timestamps
+- Notifications
+- Messages
+- Event timing
+- Booking applications
+
+---
+
+## getDate()
+
+Returns a formatted date string.
+
+### Signature
+
+```ts
+getDate(isoFormat?: boolean): string
+```
+
+### Parameters
+
+| Parameter | Type    | Default |
+| --------- | ------- | ------- |
+| isoFormat | boolean | false   |
+
+### Example
+
+```ts
+const date = uiDate("2026-08-15");
+
+date.getDate();
+// 08/15/2026
+
+date.getDate(true);
+// 2026-08-15
+```
+
+### Use Cases
+
+Use the default format for displaying dates to users.
+
+Use ISO format when:
+
+- Saving to databases
+- Sending API requests
+- Comparing dates
+- Serializing JSON
+
+---
+
+## isLeapYear()
+
+Checks whether the year is a leap year.
+
+### Signature
+
+```ts
+isLeapYear(): boolean
+```
+
+### Example
+
+```ts
+uiDate("2024-01-01").isLeapYear();
+
+// true
+```
+
+### Use Cases
+
+Useful for:
+
+- Date calculations
+- Financial software
+- Calendar systems
+
+---
+
+## isWeekend()
+
+Determines whether the date falls on Saturday or Sunday.
+
+### Signature
+
+```ts
+isWeekend(): boolean
+```
+
+### Example
+
+```ts
+uiDate("2026-08-15").isWeekend();
+
+// true
+```
+
+### Use Cases
+
+Perfect for:
+
+- Attendance systems
+- Leave management
+- Booking applications
+- Work schedule planners
+
+---
+
+## isToday()
+
+Checks if the wrapped date is today's date.
+
+### Signature
+
+```ts
+isToday(): boolean
+```
+
+### Example
+
+```ts
+uiDate().isToday();
+
+// true
+```
+
+### Use Cases
+
+Useful for highlighting today's events or messages.
+
+---
+
+## isTomorrow()
+
+Checks if the wrapped date is tomorrow.
+
+### Signature
+
+```ts
+isTomorrow(): boolean
+```
+
+### Example
+
+```ts
+uiDate(Date.now() + 86400000).isTomorrow();
+```
+
+### Use Cases
+
+Great for reminders and upcoming event notifications.
+
+---
+
+## isYesterday()
+
+Checks if the wrapped date represents yesterday.
+
+### Signature
+
+```ts
+isYesterday(): boolean
+```
+
+### Example
+
+```ts
+uiDate(Date.now() - 86400000).isYesterday();
+```
+
+### Use Cases
+
+Useful for messaging apps, timelines, and activity feeds.
+
+---
+
+## getRelativeTime()
+
+Returns a localized relative time string.
+
+### Signature
+
+```ts
+getRelativeTime(): string
+```
+
+### Example
+
+```ts
+uiDate(Date.now() - 60000).getRelativeTime();
+
+// 1 minute ago
+
+uiDate(Date.now() + 7200000).getRelativeTime();
+
+// in 2 hours
+```
+
+### Use Cases
+
+One of the most commonly used methods.
+
+Recommended for:
+
+- Social media feeds
+- Notifications
+- Chat applications
+- Activity history
+- Comments
+
+---
+
+## getRelativeTimeParts()
+
+Returns structured relative time information.
+
+### Signature
+
+```ts
+getRelativeTimeParts(): RelativeTimeParts
+```
+
+### Returns
+
+```ts
+{
+  value: number;
+  unit: "second" | "minute" | "hour" | "day" | ...;
+  direction: "past" | "future" | "present";
+  formattedValue: string;
+  formattedUnit: string;
+  formattedText: string;
+}
+```
+
+### Example
+
+```ts
+uiDate(Date.now() - 7200000).getRelativeTimeParts();
+```
+
+Returns
+
+```ts
+{
+  value: 2,
+  unit: "hour",
+  direction: "past",
+  formattedValue: "2",
+  formattedUnit: "hours",
+  formattedText: "2 hours ago"
+}
+```
+
+### Use Cases
+
+Use this API when building fully customized relative time UIs instead of relying on a single formatted string.
+
+Examples include:
+
+- Internationalized interfaces
+- Animated counters
+- Custom timeline components
+
+---
+
+## formatFullDate()
+
+Returns a complete human-readable date.
+
+### Signature
+
+```ts
+formatFullDate(short?: boolean): string
+```
+
+### Example
+
+```ts
+uiDate("2026-08-15").formatFullDate();
+
+// Saturday 15, August, 2026
+
+uiDate("2026-08-15").formatFullDate(true);
+
+// Sat 15, Aug, 2026
+```
+
+### Use Cases
+
+Recommended for:
+
+- Event pages
+- Invoice dates
+- Reports
+- Profile pages
+
+---
+
+## getOverview()
+
+Returns all computed values in a single object.
+
+### Signature
+
+```ts
+getOverview(): DateOverview
+```
+
+### Example
+
+```ts
+const overview = uiDate().getOverview();
+```
+
+Returns
+
+```ts
+{
+  (dayName,
+    shortDayName,
+    monthName,
+    shortMonthName,
+    monthCount,
+    day,
+    year,
+    isoDate,
+    usaDate,
+    time12,
+    time24,
+    isLeapYear,
+    isWeekend,
+    relativeTime,
+    isToday,
+    isTomorrow,
+    isYesterday,
+    formatFullDate);
+}
+```
+
+### Use Cases
+
+This is the recommended API when you need multiple date properties simultaneously.
+
+Instead of calling several methods:
+
+```ts
+date.getDayName();
+date.getMonthName();
+date.getTime();
+date.getDate();
+date.isWeekend();
+```
+
+You can simply call:
+
+```ts
+const overview = date.getOverview();
+```
+
+This keeps your code cleaner, more readable, and avoids repetitive method calls.
+
+Recommended for:
+
+- Dashboard applications
+- Calendar screens
+- Event details
+- User profile pages
+- Date summary components
+
+## Choosing Between `getRelativeTime()` and `getRelativeTimeParts()`
+
+Both methods provide relative time information, but they serve different purposes.
+
+| Feature                | `getRelativeTime()`               | `getRelativeTimeParts()`          |
+| ---------------------- | --------------------------------- | --------------------------------- |
+| Returns                | Human-readable string             | Structured object                 |
+| Best For               | Displaying relative time directly | Building custom UI components     |
+| Ready to Render        | ✅ Yes                            | ❌ No                             |
+| Custom Styling         | ❌ No                             | ✅ Yes                            |
+| Access to Value & Unit | ❌ No                             | ✅ Yes                            |
+| Internationalization   | ✅ Uses `Intl.RelativeTimeFormat` | ✅ Uses `Intl.RelativeTimeFormat` |
+| Recommended For        | Most applications                 | Advanced or custom interfaces     |
+
+### Which one should I use?
+
+Use **`getRelativeTime()`** if you simply want to display relative time to your users.
+
+```ts
+// "2 hours ago"
+post.createdAt.getRelativeTime();
+```
+
+Use **`getRelativeTimeParts()`** when you need complete control over how the relative time is rendered.
+
+```ts
+// { value: 2, unit: "hour", direction: "past", ... }
+post.createdAt.getRelativeTimeParts();
+```
+
+> **Recommendation**
+>
+> For most applications, `getRelativeTime()` is the recommended choice. Reach for `getRelativeTimeParts()` only when you need structured data for custom rendering, animations, or reusable UI components.
 
 ## 🤝 Contributing
 

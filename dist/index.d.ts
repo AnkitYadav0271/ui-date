@@ -17,10 +17,19 @@ export interface DateOverview {
     isLeapYear: boolean;
     isWeekend: boolean;
     relativeTime: string;
+    relativeTimeParts: RelativeTimeParts;
     isToday: boolean;
     isTomorrow: boolean;
     isYesterday: boolean;
     formatFullDate: string;
+}
+export interface RelativeTimeParts {
+    value: number;
+    unit: Intl.RelativeTimeFormatUnit;
+    direction: "past" | "future" | "present";
+    formattedValue: string;
+    formattedUnit: string;
+    formattedText: string;
 }
 declare class UiDate {
     private _date;
@@ -53,6 +62,8 @@ declare class UiDate {
     isYesterday(): boolean;
     /** Returns human readable relative time */
     getRelativeTime(): string;
+    /** Returns human readable object (eg: {value:2,unit:"hour",direction:"past" |"present"| "future"}) */
+    getRelativeTimeParts(): RelativeTimeParts;
     /** Returns human readable formatted full date */
     formatFullDate(short?: boolean): string;
     /** Returns overview of computed date properties */
