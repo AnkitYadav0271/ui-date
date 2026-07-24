@@ -23,13 +23,13 @@
 - **Full Internationalization (i18n):** Support for all standard BCP 47 locale tags (`es-ES`, `de-DE`, `ja-JP`, etc.).
 - **Graceful Locale Fallback:** Bad or unsupported locale strings now safely default to system locale without crashing.
 - **Native Relative Time Formatting:** Utilizes `Intl.RelativeTimeFormat` for automatically localized relative dates.
--  **Fully Typed** — Complete TypeScript definitions included.
--  **Chainable API** — Clean, intuitive, object-oriented methods.
--  **Relative Time** — Generate strings like `"5 minutes ago"` or `"in 2 days"`.
--  **Readable Date Formatting** — Format dates into human-friendly strings.
--  **Date Overview API** — Retrieve all commonly used date properties in a single call.
--  **Date Status Helpers** — Check if a date is today, tomorrow, yesterday, a weekend, or a leap year.
--  **Framework Agnostic** — Works with any JavaScript or TypeScript project.
+- **Fully Typed** — Complete TypeScript definitions included.
+- **Chainable API** — Clean, intuitive, object-oriented methods.
+- **Relative Time** — Generate strings like `"5 minutes ago"` or `"in 2 days"`.
+- **Readable Date Formatting** — Format dates into human-friendly strings.
+- **Date Overview API** — Retrieve all commonly used date properties in a single call.
+- **Date Status Helpers** — Check if a date is today, tomorrow, yesterday, a weekend, or a leap year.
+- **Framework Agnostic** — Works with any JavaScript or TypeScript project.
 
 ---
 
@@ -98,6 +98,43 @@ date.isWeekend();
 - Node.js
 - Bun
 - Deno
+
+## 💡 Why `ui-date`?
+
+While popular libraries like **Day.js** or **date-fns** are great for general date manipulation, `ui-date` is purpose-built for modern, internationalized **UI relative time display**.
+
+| Feature                   | `ui-date`                                                                                        | Day.js / date-fns                                                                        |
+| :------------------------ | :----------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| **Core Focus**            | Structured UI decomposition & multi-locale badges                                                | General date math, parsing, and string formatting                                        |
+| **Programmatic Parts**    | **Native `getRelativeTimeParts()`** returning `formattedValue`, `formattedUnit`, and `direction` | Returns single opaque string (`"2 hours ago"`). Requires regex to split.                 |
+| **Zero-Bundle i18n**      | **100% native** via web `Intl.RelativeTimeFormat`. Supports all BCP 47 tags with **0kb** added   | Requires importing separate locale JS files (`dayjs/locale/es`), increasing bundle size  |
+| **Zero Plugins**          | Relative time parsing works **out-of-the-box**                                                   | Requires extending core with plugins (e.g., `dayjs.extend(relativeTime)`)                |
+| **Mathematical Accuracy** | Strict unit boundaries with zero opinionated soft thresholds                                     | Applies soft rounding thresholds (e.g., automatically rounding 45 seconds to "a minute") |
+| **Footprint**             | Extremely lightweight (~1-2 kB) with **zero dependencies**                                       | Varies based on imported plugins and locale files                                        |
+
+---
+
+### 🎨 Quick Comparison Example
+
+If you want to render a custom UI badge with a styled number and unit (e.g., `<span class="count">2</span><span class="label">heures</span>`):
+
+#### ❌ With other libraries:
+
+```javascript
+// Returns a single string: "2 hours ago"
+const text = dayjs().from(past, true);
+
+// You have to write custom regex hacks to extract "2" and "hours" across different languages...
+
+const { formattedValue, formattedUnit } = uiDate(
+  past,
+  "en-US",
+).getRelativeTimeParts();
+
+// formattedValue -> "2"
+// formattedUnit  -> "hours"
+// Ready to drop directly into your JSX / HTML components!
+```
 
 ## 📖 API Reference
 

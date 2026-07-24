@@ -15,7 +15,7 @@
   "homepage": "https://github.com/AnkitYadav0271/ui-date#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnkitYadav0271/ui-date"
+    "url": "git+https://github.com/AnkitYadav0271/ui-date.git"
   },
   "bugs": {
     "url": "https://github.com/AnkitYadav0271/ui-date/issues"
