@@ -1,6 +1,6 @@
 {
   "name": "ui-date",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "Lightweight, zero-dependency, locale-aware date formatting and relative time utility for modern UIs.",
   "type": "module",
   "main": "dist/index.js",
