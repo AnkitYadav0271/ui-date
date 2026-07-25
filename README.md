@@ -642,6 +642,13 @@ Returns
   formattedText: "2 hours ago"
 }
 ```
+### Guaranteed Unit Extraction (Zero Fallback Risk)
+
+Unlike simple regex splitting, `getRelativeTimeParts()` uses native `Intl.RelativeTimeFormat.prototype.formatToParts()` combined with an intelligent token-isolation algorithm.
+
+- **Non-Western Grammar Support:** Works seamlessly across languages with non-standard word orders (e.g., French, Korean, Japanese, Arabic).
+- **Guaranteed `formattedUnit`:** `formattedUnit` is guaranteed to return a localized string unit (e.g., `"hours"`, `"분"`), stripping away directional words like `"ago"`, `"in"`, or `"前"`.
+- **RTL Ready:** Full support for Right-to-Left (RTL) languages without breaking layout components.
 
 ### Use Cases
 
