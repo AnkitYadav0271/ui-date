@@ -8,48 +8,34 @@ Whether you need to display a date, format a time, check if a day is today, or s
 
 ---
 
-#  Why ui-date?
+## ⚡ Package Size
 
-Most date libraries are designed for complex date manipulation.
+- 📦 Unpacked Size: **1.64 kB**
+- 🗜️ Minified + Gzipped: **< 1 kB**
+- 🚫 Runtime Dependencies: **0**
+- 🌲 Tree-shakeable ES Module
+- 📘 Full TypeScript Support
 
-`ui-date` focuses on the most common UI tasks developers perform every day:
+## ✨ Features
 
-- Formatting dates
-- Formatting time
-- Showing relative time
-- Displaying localized day and month names
-- Checking date status (today, tomorrow, yesterday, weekend)
-- Building custom relative time components
-- Getting multiple date values in one call
+## ✨ Features
 
-Instead of learning a large API, you can use a small collection of methods that cover the majority of UI use cases.
-
----
-
----
-
-#  Features
-
--  Zero Dependencies
--  Tiny Bundle Size
--  Fully Typed
--  Native Internationalization (i18n)
--  Works with JavaScript & TypeScript
--  Chainable Class API
--  Standalone Functional API
--  Date Formatting
--  Time Formatting
--  Localized Day & Month Names
--  Relative Time Formatting
--  Structured Relative Time Parts
--  Date Overview API
--  Date Status Helpers
--  Tree Shakeable
--  Works in Browser, Node.js, React, React Native and more
+- 🚫 **Zero Dependencies** — Built entirely on native JavaScript APIs.
+- ⚡ **Lightweight & Fast** — Tiny bundle size with minimal runtime overhead.
+- **Full Internationalization (i18n):** Support for all standard BCP 47 locale tags (`es-ES`, `de-DE`, `ja-JP`, etc.).
+- **Graceful Locale Fallback:** Bad or unsupported locale strings now safely default to system locale without crashing.
+- **Native Relative Time Formatting:** Utilizes `Intl.RelativeTimeFormat` for automatically localized relative dates.
+- **Fully Typed** — Complete TypeScript definitions included.
+- **Chainable API** — Clean, intuitive, object-oriented methods.
+- **Relative Time** — Generate strings like `"5 minutes ago"` or `"in 2 days"`.
+- **Readable Date Formatting** — Format dates into human-friendly strings.
+- **Date Overview API** — Retrieve all commonly used date properties in a single call.
+- **Date Status Helpers** — Check if a date is today, tomorrow, yesterday, a weekend, or a leap year.
+- **Framework Agnostic** — Works with any JavaScript or TypeScript project.
 
 ---
 
-#  Installation
+## 📦 Installation
 
 ### npm
 
@@ -1533,6 +1519,13 @@ Returns
     formattedText: "2 hours ago"
 }
 ```
+### Guaranteed Unit Extraction (Zero Fallback Risk)
+
+Unlike simple regex splitting, `getRelativeTimeParts()` uses native `Intl.RelativeTimeFormat.prototype.formatToParts()` combined with an intelligent token-isolation algorithm.
+
+- **Non-Western Grammar Support:** Works seamlessly across languages with non-standard word orders (e.g., French, Korean, Japanese, Arabic).
+- **Guaranteed `formattedUnit`:** `formattedUnit` is guaranteed to return a localized string unit (e.g., `"hours"`, `"분"`), stripping away directional words like `"ago"`, `"in"`, or `"前"`.
+- **RTL Ready:** Full support for Right-to-Left (RTL) languages without breaking layout components.
 
 ---
 
