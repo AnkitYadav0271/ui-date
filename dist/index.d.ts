@@ -48,10 +48,54 @@ declare class UiDate {
     isToday(): boolean;
     isTomorrow(): boolean;
     isYesterday(): boolean;
-    getRelativeTime(): string;
-    getRelativeTimeParts(): RelativeTimeParts;
+    getRelativeTime(input?: number | string | Date): string;
+    getRelativeTimeParts(input?: Date | number | string): RelativeTimeParts;
     formatFullDate(short?: boolean): string;
     getOverview(): DateOverview;
 }
 export declare function uiDate(input?: string | Date | number, locale?: string): UiDate;
+declare function getDayName({ input, short, locale, }?: {
+    input?: string | number | Date;
+    locale?: string;
+    short?: boolean;
+}): string;
+declare function getMonthName({ input, short, locale, }?: {
+    input?: string | number | Date;
+    locale?: string;
+    short?: boolean;
+}): string;
+declare function getYear(input?: Date | string | number): number;
+declare function getMonthCount(input?: string | Date | number): number;
+declare function getDay(input?: string | Date | number): number;
+declare function getTime({ input, use24HourFormat, locale, }?: {
+    input?: string | number | Date;
+    locale?: string;
+    use24HourFormat?: boolean;
+}): string;
+declare function getDate({ input, isoFormat, locale, }?: {
+    input?: string | number | Date;
+    locale?: string;
+    isoFormat?: boolean;
+}): string;
+declare function isLeapYear(input?: string | Date | number): boolean;
+declare function isWeekend(input?: string | number | Date): boolean;
+declare function isToday(input: string | number | Date): boolean;
+declare function isTomorrow(input: string | number | Date): boolean;
+declare function isYesterday(input: string | number | Date): boolean;
+declare function getRelativeTime({ date1, date2, locale, }: {
+    date1: string | number | Date;
+    date2?: string | number | Date;
+    locale?: string;
+}): string;
+declare function getRelativeTimeParts({ date1, date2, locale, }: {
+    date1: string | number | Date;
+    date2?: string | number | Date;
+    locale?: string;
+}): RelativeTimeParts;
+declare function formatFullDate({ input, locale, short, }: {
+    input: string | number | Date;
+    locale?: string;
+    short?: boolean;
+}): string;
 export default uiDate;
+export { getDayName, getMonthName, getYear, getDate, getDay, getMonthCount, getTime, isLeapYear, isToday, isTomorrow, isWeekend, isYesterday, formatFullDate, getRelativeTime, getRelativeTimeParts, };

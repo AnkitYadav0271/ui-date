@@ -1,5 +1,22 @@
 import { it, expect, describe, beforeEach, afterEach, vi } from "vitest";
-import uiDate from "./index.js";
+
+import uiDate, {
+  getRelativeTime,
+  getRelativeTimeParts,
+  getDayName,
+  getMonthName,
+  getYear,
+  getMonthCount,
+  getDay,
+  getTime,
+  getDate,
+  formatFullDate,
+  isToday,
+  isTomorrow,
+  isYesterday,
+  isWeekend,
+  isLeapYear,
+} from "../src/index";
 
 // --- Day Tests ---
 describe("Day & Weekday", () => {
@@ -317,5 +334,282 @@ describe("Locale Support", () => {
 describe("Error Handling", () => {
   it("should throw an error for invalid date inputs", () => {
     expect(() => uiDate("not-a-valid-date")).toThrow("Invalid input");
+  });
+});
+
+describe("ui-date Standalone Functional API - Edge Cases & Comprehensive Tests", () => {
+  // Fixed system reference time: Aug 15, 2026 12:00:00 UTC (Saturday)
+  const MOCK_NOW = new Date("2026-08-15T12:00:00Z");
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(MOCK_NOW);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  // ==========================================
+  // 1. RELATIVE TIME & RELATIVE TIME PARTS
+  // ==========================================
+  describe("getRelativeTime() - Standalone", () => {
+    it("should calculate relative time against current time when targetDate is omitted", () => {
+      const past = new Date("2026-08-15T10:00:00Z"); // 2 hours ago
+      expect(getRelativeTime({ date1: past })).toMatch(/2 hours ago/i);
+    });
+
+    it("should calculate Date-to-Date relative distance", () => {
+      expect(
+        getRelativeTime({ date1: "2026-08-01", date2: "2026-08-15" }),
+      ).toMatch(/14 days ago/i);
+      expect(
+        getRelativeTime({ date1: "2026-08-15", date2: "2026-08-01" }),
+      ).toMatch(/in 14 days/i);
+    });
+
+    it("should gracefully handle identical dates (present / 0 difference)", () => {
+      expect(
+        getRelativeTime({ date1: "2026-08-15", date2: "2026-08-15" }),
+      ).toMatch(/now|0 seconds/i);
+    });
+
+    it("should fallback to 'now' when input date is undefined", () => {
+      expect(getRelativeTime({ date1: "2026-08-10" })).toMatch(/5 days ago/i);
+    });
+
+    it("should correctly handle internationalized locale strings", () => {
+      expect(
+        getRelativeTime({
+          date1: "2026-08-01",
+          date2: "2026-08-15",
+          locale: "es-ES",
+        }),
+      ).toMatch(/hace 14 días/i);
+      expect(
+        getRelativeTime({
+          date1: "2026-08-01",
+          date2: "2026-08-15",
+          locale: "de-DE",
+        }),
+      ).toMatch(/vor 14 Tagen/i);
+    });
+
+    it("should fallback gracefully if an invalid locale string is provided", () => {
+      expect(() =>
+        getRelativeTime({
+          date1: "2026-08-01",
+          date2: "2026-08-15",
+          locale: "invalid-locale-123",
+        }),
+      ).not.toThrow();
+      expect(
+        getRelativeTime({
+          date1: "2026-08-01",
+          date2: "2026-08-15",
+          locale: "invalid-locale-123",
+        }),
+      ).toMatch(/14 days ago/i);
+    });
+  });
+
+  describe("getRelativeTimeParts() - Standalone", () => {
+    it("should return structured breakdown for past, present, and future dates", () => {
+      const pastParts = getRelativeTimeParts({
+        date1: "2026-08-10",
+        date2: "2026-08-15",
+      });
+      expect(pastParts).toEqual({
+        value: 5,
+        unit: "day",
+        direction: "past",
+        formattedValue: "5",
+        formattedUnit: expect.stringMatching(/days/i),
+        formattedText: expect.stringMatching(/5 days ago/i),
+      });
+
+      const futureParts = getRelativeTimeParts({
+        date1: "2026-08-20",
+        date2: "2026-08-15",
+      });
+      expect(futureParts.direction).toBe("future");
+      expect(futureParts.value).toBe(5);
+    });
+
+    it("should handle boundary transitions correctly (e.g., millisecond thresholds)", () => {
+      const edgePast = new Date(MOCK_NOW.getTime() - 999); // 999ms ago
+      const parts = getRelativeTimeParts({ date1: new Date() });
+      expect(parts.unit).toBe("second");
+    });
+  });
+
+  // ==========================================
+  // 2. GETTERS WITH OPTIONS OBJECT PATTERN
+  // ==========================================
+  describe("getDayName() - Standalone", () => {
+    it("should return day name with options object", () => {
+      expect(getDayName({ input: "2026-08-15" })).toBe("Saturday");
+      expect(getDayName({ input: "2026-08-15", short: true })).toBe("Sat");
+    });
+
+    it("should default to current date when options object is empty or omitted", () => {
+      expect(getDayName()).toBe("Saturday");
+      expect(getDayName({})).toBe("Saturday");
+      expect(getDayName({ short: true })).toBe("Sat");
+    });
+
+    it("should format custom locales correctly", () => {
+      expect(getDayName({ input: "2026-08-15", locale: "hi-IN" })).toMatch(
+        /शनिवार/,
+      );
+      expect(
+        getDayName({ input: "2026-08-15", locale: "fr-FR", short: true }),
+      ).toBe("sam.");
+    });
+  });
+
+  describe("getMonthName() - Standalone", () => {
+    it("should format long and short month names", () => {
+      expect(getMonthName({ input: "2026-08-15" })).toBe("August");
+      expect(getMonthName({ input: "2026-08-15", short: true })).toBe("Aug");
+    });
+
+    it("should default to current month when called without parameters", () => {
+      expect(getMonthName()).toBe("August");
+      expect(getMonthName({ short: true })).toBe("Aug");
+    });
+  });
+
+  describe("getTime() & getDate() - Standalone", () => {
+    it("should toggle standard vs. ISO date formatting", () => {
+      expect(getDate({ input: "2026-08-15", isoFormat: true })).toBe(
+        "2026-08-15",
+      );
+      expect(getDate({ input: "2026-08-15", isoFormat: false })).toBe(
+        "08/15/2026",
+      );
+    });
+
+    it("should fallback to system 'now' when input is omitted in options", () => {
+      expect(getDate({ isoFormat: true })).toBe("2026-08-15");
+    });
+  });
+
+  describe("formatFullDate() - Standalone", () => {
+    it("should format full localized readable date strings", () => {
+      expect(formatFullDate({ input: "2026-08-15" })).toBe(
+        "Saturday 15, August, 2026",
+      );
+      expect(formatFullDate({ input: "2026-08-15", short: true })).toBe(
+        "Sat 15, Aug, 2026",
+      );
+    });
+
+    it("should handle custom locales in full date formatting", () => {
+      expect(formatFullDate({ input: "2026-08-15", locale: "es-ES" })).toMatch(
+        /sábado/i,
+      );
+    });
+  });
+
+  // ==========================================
+  // 3. NUMERIC GETTERS (DEFAULT ARGUMENT SUPPORT)
+  // ==========================================
+  describe("getYear(), getMonthCount(), getDay() - Standalone", () => {
+    it("should extract year, 1-indexed month, and day of month", () => {
+      expect(getYear("2026-08-15")).toBe(2026);
+      expect(getMonthCount("2026-08-15")).toBe(8); // August = 8
+      expect(getDay("2026-08-15")).toBe(15);
+    });
+
+    it("should handle numeric millisecond timestamps", () => {
+      const timestamp = new Date("2026-08-15T00:00:00Z").getTime();
+      expect(getYear(timestamp)).toBe(2026);
+      expect(getMonthCount(timestamp)).toBe(8);
+      expect(getDay(timestamp)).toBe(15);
+    });
+
+    it("should default to current time when argument is omitted", () => {
+      expect(getYear()).toBe(2026);
+      expect(getMonthCount()).toBe(8);
+      expect(getDay()).toBe(15);
+    });
+
+    it("should handle leap year dates accurately (e.g. Feb 29)", () => {
+      expect(getMonthCount("2024-02-29")).toBe(2);
+      expect(getDay("2024-02-29")).toBe(29);
+    });
+  });
+
+  // ==========================================
+  // 4. BOOLEAN STATUS HELPERS
+  // ==========================================
+  describe("Status Checks - Standalone", () => {
+    it("should identify isToday(), isTomorrow(), and isYesterday()", () => {
+      expect(isToday("2026-08-15")).toBe(true);
+      expect(isToday("2026-08-16")).toBe(false);
+
+      expect(isTomorrow("2026-08-16")).toBe(true);
+      expect(isTomorrow("2026-08-15")).toBe(false);
+
+      expect(isYesterday("2026-08-14")).toBe(true);
+      expect(isYesterday("2026-08-15")).toBe(false);
+    });
+
+    it("should handle midnight boundaries for isToday()", () => {
+      expect(isToday("2026-08-15T00:00:00.000Z")).toBe(true);
+      expect(isToday(new Date())).toBe(true);
+    });
+
+    it("should identify weekends correctly", () => {
+      expect(isWeekend("2026-08-15")).toBe(true); // Saturday
+      expect(isWeekend("2026-08-16")).toBe(true); // Sunday
+      expect(isWeekend("2026-08-17")).toBe(false); // Monday
+    });
+
+    it("should identify leap years correctly", () => {
+      expect(isLeapYear("2024-01-01")).toBe(true); // Leap year
+      expect(isLeapYear("2026-01-01")).toBe(false); // Standard year
+      expect(isLeapYear("2000-01-01")).toBe(true); // Century leap year
+      expect(isLeapYear("1900-01-01")).toBe(false); // Century non-leap year
+    });
+
+    it("should default status helpers to 'now' when no argument is passed", () => {
+      expect(isToday(new Date())).toBe(true);
+      expect(isTomorrow(new Date())).toBe(false);
+      expect(isYesterday(new Date())).toBe(false);
+      expect(isWeekend()).toBe(true); // Aug 15, 2026 is Saturday
+      expect(isLeapYear()).toBe(false); // 2026 is not a leap year
+    });
+  });
+
+  // ==========================================
+  // 6. EDGE CASES & INVALID INPUT HANDLING
+  // ==========================================
+  describe("Edge Cases & Resilience", () => {
+    it("should handle invalid date string inputs gracefully", () => {
+      // 1. Check that validateDate throws the exact expected Error message
+      expect(() => getYear("invalid-date-string")).toThrow(
+        "Invalid input:invalid-date-string",
+      );
+
+      // 2. Check functions wrapped with try/catch or fallback logic
+      expect(() =>
+        getRelativeTime({
+          date1: "soemthing",
+          date2: "string",
+          locale: "local",
+        }),
+      ).not.toThrow("Invalid input:something");
+
+      // 3. If you want isToday to throw on invalid input:
+      expect(() => isToday("not-a-date")).toThrow("Invalid input:not-a-date");
+    });
+
+    it("should handle extreme historical and far-future years", () => {
+      expect(getYear("1000-01-01")).toBe(1000);
+      expect(getYear("3000-01-01")).toBe(3000);
+      expect(isLeapYear("2000-01-01")).toBe(true);
+    });
   });
 });

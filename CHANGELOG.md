@@ -1,6 +1,24 @@
 # Changelog
 
+[2.0.0] - 2026-07-26
+🚀 Added
+Dual Architecture (Class vs. Standalone Functional): Re-architected package to export both the ergonomic UiDate class (uiDate()) and standalone pure functional utilities (e.g., getRelativeTime(), getDayName()) for tree-shaking support (~300 bytes per method).
 
+Target Date Parameter (targetDate): Extended getRelativeTime() and getRelativeTimeParts() to accept an optional targetDate parameter to compute relative distance between two explicit dates (Date-to-Date distance).
+
+Options Object Pattern: Adopted an options object pattern for functional utility exports (e.g., getDayName({ input, locale, short })) to prevent positional argument sequence awkwardness.
+
+Tree-Shaking Support: Configured "sideEffects": false in package.json for bundler optimization.
+
+⚡ Changed
+Default Parameter Fallbacks: Standardized input parameters across all functional exports to default to the current system time (new Date()) when undefined or omitted.
+
+Improved Error Handling: Centralized error throwing in validateDate() for invalid date inputs with clear error messages.
+
+🧪 Testing & Documentation
+Comprehensive Vitest test suites covering standard usage, options object patterns, timezone boundaries, and edge cases.
+
+Completely rewritten README.md featuring architecture guides, comparative performance matrices, and custom UI component examples.
 
 ## [1.3.0] - 2026-07-24
 
