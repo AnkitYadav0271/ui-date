@@ -30,7 +30,7 @@
 - **Date Overview API** — Retrieve all commonly used date properties in a single call.
 - **Date Status Helpers** — Check if a date is today, tomorrow, yesterday, a weekend, or a leap year.
 - **Framework Agnostic** — Works with any JavaScript or TypeScript project.
-- **Guaranteed Unit Safety** — formattedUnit uses multi-layer token extraction to guarantee a clean, localized unit label across all locales and browsers even in complex CJK or RTL languages without requiring manual regex splitting.
+- **Guaranteed Unit Safety** — getRelativeTimeParts() uses multi-layer token extraction to guarantee a clean, localized unit label across all locales and browsers even in complex CJK or RTL languages without requiring manual regex splitting.
 
 ---
 
