@@ -69,6 +69,8 @@ bun add ui-date
 
 Choose the style you prefer.
 
+```  For latest docs please prefer github readme   ```
+
 ## 1. Chainable Class API
 
 Ideal when you're working with a single date and want to call multiple methods.
