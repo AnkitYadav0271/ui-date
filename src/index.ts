@@ -168,8 +168,6 @@ class UiDate {
       (this._date.getTime() - now.getTime()) / 1000,
     );
 
-    if (Math.abs(diffInSeconds) < 5) return "just now";
-
     const rtf = new Intl.RelativeTimeFormat(this._locale, { numeric: "auto" });
 
     const units: { name: Intl.RelativeTimeFormatUnit; seconds: number }[] = [
@@ -188,7 +186,7 @@ class UiDate {
       }
     }
 
-    return "just now";
+    return rtf.format(0, "second");
   }
 
   /** Returns human readable object (eg: {value:2,unit:"hour",direction:"past" |"present"| "future"}) */
@@ -538,8 +536,6 @@ function getRelativeTime({
 
   const diffInSeconds = Math.round((d1.getTime() - d2.getTime()) / 1000);
 
-  if (Math.abs(diffInSeconds) < 5) return "just now";
-
   const rtf = new Intl.RelativeTimeFormat(valLocal, { numeric: "auto" });
 
   const units: { name: Intl.RelativeTimeFormatUnit; seconds: number }[] = [
@@ -558,7 +554,7 @@ function getRelativeTime({
     }
   }
 
-  return "just now";
+  return rtf.format(0, "second");
 }
 
 /** Returns human readable object (eg: {value:2,unit:"hour",direction:"past" |"present"| "future"}) */
